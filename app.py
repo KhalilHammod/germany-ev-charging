@@ -107,6 +107,13 @@ def load_data():
     df['lon'] = pd.to_numeric(coords[1].str.strip(), errors='coerce')
     df = df.dropna(subset=['lat', 'lon'])
     
+    # Filter out geographical coordinate outliers outside Germany bounds
+    # (Typical bounding box: Lat 47.2 to 55.1, Lon 5.8 to 15.1)
+    df = df[
+        (df['lat'] >= 47.2) & (df['lat'] <= 55.1) &
+        (df['lon'] >= 5.8) & (df['lon'] <= 15.1)
+    ]
+    
     # Fill missing values and convert types
     df['Anzahl Ladepunkte'] = pd.to_numeric(df['Anzahl Ladepunkte'], errors='coerce').fillna(1).astype(int)
     df['Nennleistung Ladeeinrichtung [kW]'] = pd.to_numeric(df['Nennleistung Ladeeinrichtung [kW]'], errors='coerce').fillna(0)
